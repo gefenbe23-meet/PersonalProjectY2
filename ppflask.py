@@ -44,6 +44,7 @@ def signin():
 			error = "Authentication failed"
 	return render_template("signin.html")
 
+
 @app.route ('/signup',methods= ['GET','POST'])
 def signup():
 	error=""
@@ -59,9 +60,11 @@ def signup():
 		error= "Couldnt Signup"
 		return render_template("signup.html")
 
+
 @app.route ('/',methods= ['GET','POST'])
 def index():
 	return render_template("index.html")
+
 
 @app.route('/post',methods= ['GET','POST'])
 def post():
@@ -73,13 +76,8 @@ def post():
 			return redirect (url_for('/post'))
 		except :
 			print ("Couldnt save post.")
-			return render_template ("post.html")
-
-@app.route('/post')
-def all_post ():
 	post = db.child('post').get().val()
-	return render_template("post.html",posts=posts)
-
+	return render_template ("post.html",posts=post)
 
 	
 

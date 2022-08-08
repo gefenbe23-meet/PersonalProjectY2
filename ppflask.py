@@ -1,4 +1,4 @@
-from flask import Flask,render_template, request
+from flask import Flask,render_template, request,redirect,url_for
 from flask import session as PersonalProject
 import pyrebase
 
@@ -30,6 +30,8 @@ auth=firebase.auth()
 db=firebase.database()
 
 app = Flask (__name__)
+app.config['SECRET-KEY'] = "Gefennnnn"
+app.config['SECRET_KEY'] = "Gefennnnn"
 
 @app.route('/signin', methods=['GET', 'POST'])
 def signin():
@@ -48,17 +50,19 @@ def signin():
 @app.route ('/signup',methods= ['GET','POST'])
 def signup():
 	error=""
-	if request.method=='POST':
+	if request.method == 'POST':
 		email = request.form['email']
 		password= request.form['password']
 		newUser = {"full_name":request.form ["full_name"], "address":request.form["address"],"phone_number":request.form["phone_number"]}
-	try:
-		PersonalProject ['user']= auth.create_user_with_email_and_password (email,password)
-		db.child("Users").child(PersonalProject['user']['localId']).set(newUser)
-		return redirect (url_for('/signin'))
-	except:
-		error= "Couldnt Signup"
-		return render_template("signup.html")
+		try:
+			PersonalProject ['user']= auth.create_user_with_email_and_password (email,password)
+			db.child("Users").child(PersonalProject['user']['localId']).set(newUser)
+			return redirect(url_for('signin'))
+		
+		except:
+			error= "Couldnt Signup"
+			return render_template("signup.html")
+	return render_template("signup.html")
 
 
 @app.route ('/',methods= ['GET','POST'])
